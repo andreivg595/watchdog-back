@@ -1,8 +1,16 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import * as bcrypt from 'bcryptjs';
+import { Role } from 'src/auth/enums/role.enum';
 
 @Injectable()
 export class UsersService {
@@ -52,5 +60,51 @@ export class UsersService {
     } catch (error) {
       throw new InternalServerErrorException('Error finding the user by email');
     }
+  }
+
+  findAll() {
+    return this.usersRepository.find();
+  }
+
+  async findOneById(id: number) {
+    const user = await this.usersRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
+  }
+
+  async update(id: number, updateUserDto: UpdateUserDto, userRole: string) {
+    const user = await this.findOneById(id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (userRole !== Role.ADMIN) {
+      delete updateUserDto.role;
+    }
+
+    if (updateUserDto.password && updateUserDto.confirmPassword) {
+      if (updateUserDto.password !== updateUserDto.confirmPassword) {
+        throw new BadRequestException('Passwords do not match');
+      }
+      updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
+      delete updateUserDto.confirmPassword; // Eliminamos confirmPassword
+    }
+
+    Object.assign(user, updateUserDto);
+    await this.usersRepository.save(user);
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...result } = user;
+    return result;
+  }
+
+  async remove(id: number) {
+    const user = await this.findOneById(id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    await this.usersRepository.remove(user);
   }
 }
