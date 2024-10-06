@@ -16,7 +16,7 @@ import { Role } from 'src/auth/enums/role.enum';
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    private readonly usersRepository: Repository<User>,
   ) {}
 
   async createUser(
@@ -62,11 +62,15 @@ export class UsersService {
     }
   }
 
-  findAll() {
-    return this.usersRepository.find();
+  async findAll(): Promise<User[]> {
+    try {
+      return await this.usersRepository.find();
+    } catch (error) {
+      throw new InternalServerErrorException('Error fetching users');
+    }
   }
 
-  async findOneById(id: number) {
+  async findOneById(id: number): Promise<User> {
     const user = await this.usersRepository.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException('User not found');
@@ -74,7 +78,11 @@ export class UsersService {
     return user;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto, userRole: string) {
+  async update(
+    id: number,
+    updateUserDto: UpdateUserDto,
+    userRole: string,
+  ): Promise<Omit<User, 'password'>> {
     const user = await this.findOneById(id);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -100,7 +108,7 @@ export class UsersService {
     return result;
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<void> {
     const user = await this.findOneById(id);
     if (!user) {
       throw new NotFoundException('User not found');

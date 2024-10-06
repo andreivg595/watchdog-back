@@ -1,9 +1,11 @@
 import { Role } from 'src/auth/enums/role.enum';
+import { Point } from 'src/points/entities/point.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -29,4 +31,10 @@ export class User {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @OneToMany(() => Point, (point) => point.createdBy)
+  points: Point[];
+
+  @OneToMany(() => Point, (point) => point.approvedBy)
+  approvedPoints: Point[];
 }
