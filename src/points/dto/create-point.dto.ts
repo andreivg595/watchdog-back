@@ -7,6 +7,10 @@ export class CreatePointDto {
   name: string;
 
   @IsNotEmpty()
+  @IsString({ message: 'Address must be a string.' })
+  address: string;
+
+  @IsNotEmpty()
   @IsEnum(
     [
       PointType.PIPICAN,

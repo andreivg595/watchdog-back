@@ -19,6 +19,9 @@ export class Point {
   @Column()
   name: string;
 
+  @Column()
+  address: string;
+
   @Column({ type: 'enum', enum: PointType })
   type: string;
 

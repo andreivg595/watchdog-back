@@ -8,6 +8,10 @@ export class UpdatePointDto {
   name?: string;
 
   @IsOptional()
+  @IsString({ message: 'Address must be a string.' })
+  address: string;
+
+  @IsOptional()
   @IsEnum([
     PointType.PIPICAN,
     PointType.DOG_BEACH,
