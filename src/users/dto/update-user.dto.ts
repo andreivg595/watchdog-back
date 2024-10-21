@@ -41,6 +41,6 @@ export class UpdateUserDto {
   confirmPassword?: string;
 
   @IsOptional()
-  @IsEnum([Role.USER, Role.ADMIN], { message: 'Invalid role value.' })
-  role?: string;
+  @IsEnum(Role, { message: 'Invalid role value.' })
+  role?: Role;
 }

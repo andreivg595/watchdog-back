@@ -97,7 +97,7 @@ export class UsersService {
         throw new BadRequestException('Passwords do not match');
       }
       updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
-      delete updateUserDto.confirmPassword; // Eliminamos confirmPassword
+      delete updateUserDto.confirmPassword;
     }
 
     Object.assign(user, updateUserDto);

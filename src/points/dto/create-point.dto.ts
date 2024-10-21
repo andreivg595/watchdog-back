@@ -11,18 +11,10 @@ export class CreatePointDto {
   address: string;
 
   @IsNotEmpty()
-  @IsEnum(
-    [
-      PointType.PIPICAN,
-      PointType.DOG_BEACH,
-      PointType.VETERINARIAN,
-      PointType.WATER_FOUNTAIN,
-    ],
-    {
-      message: 'Invalid point type.',
-    },
-  )
-  type: string;
+  @IsEnum(PointType, {
+    message: 'Invalid point type.',
+  })
+  type: PointType;
 
   @IsNotEmpty()
   @IsDecimal({}, { message: 'Longitude must be a valid decimal number.' })

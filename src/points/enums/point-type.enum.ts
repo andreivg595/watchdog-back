@@ -1,6 +1,11 @@
 export enum PointType {
-  PIPICAN = 'pipican',
-  DOG_BEACH = 'dog_beach',
-  VETERINARIAN = 'veterinarian',
-  WATER_FOUNTAIN = 'water_fountain',
+  PARK = 'park',
+  BEACH = 'beach',
+  VET = 'vet',
+  FOUNTAIN = 'fountain',
+  SHELTER = 'shelter',
+  GROOMING = 'grooming',
+  SHOP = 'shop',
+  HOTEL = 'hotel',
+  BAR = 'bar',
 }

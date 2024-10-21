@@ -5,11 +5,13 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
   const config = new DocumentBuilder()
     .setTitle('Watchdog API')
     .setDescription('Documentation')
     .setVersion('1.0')
+    .addServer('/api/v1')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

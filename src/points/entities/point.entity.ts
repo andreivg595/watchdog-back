@@ -23,7 +23,7 @@ export class Point {
   address: string;
 
   @Column({ type: 'enum', enum: PointType })
-  type: string;
+  type: PointType;
 
   @Column('decimal', { precision: 10, scale: 6 })
   latitude: number;
@@ -32,7 +32,7 @@ export class Point {
   longitude: number;
 
   @Column({ type: 'enum', enum: PointStatus, default: PointStatus.PENDING })
-  status: string;
+  status: PointStatus;
 
   @CreateDateColumn()
   createdAt: Date;

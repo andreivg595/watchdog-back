@@ -12,13 +12,10 @@ export class UpdatePointDto {
   address: string;
 
   @IsOptional()
-  @IsEnum([
-    PointType.PIPICAN,
-    PointType.DOG_BEACH,
-    PointType.VETERINARIAN,
-    PointType.WATER_FOUNTAIN,
-  ])
-  type?: string;
+  @IsEnum(PointType, {
+    message: 'Invalid point type.',
+  })
+  type: PointType;
 
   @IsOptional()
   @IsDecimal({}, { message: 'Latitude must be a valid decimal number.' })
@@ -29,8 +26,8 @@ export class UpdatePointDto {
   longitude?: number;
 
   @IsOptional()
-  @IsEnum([PointStatus.PENDING, PointStatus.APPROVED, PointStatus.REJECTED], {
+  @IsEnum(PointStatus, {
     message: 'Invalid status value.',
   })
-  status?: string;
+  status?: PointStatus;
 }
