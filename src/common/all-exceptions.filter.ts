@@ -16,15 +16,22 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const response = ctx.getResponse();
     const request = ctx.getRequest();
 
-    const status =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
+    let status = HttpStatus.INTERNAL_SERVER_ERROR;
+    let message: string;
 
-    const message =
-      exception instanceof HttpException
-        ? exception.getResponse()
-        : 'Internal server error';
+    if (exception instanceof HttpException) {
+      status = exception.getStatus();
+      const responseMessage = exception.getResponse();
+      message =
+        typeof responseMessage === 'string'
+          ? responseMessage
+          : JSON.stringify(responseMessage);
+    } else if (exception instanceof Error) {
+      message = exception.message;
+      this.logger.error(`Stack trace: ${exception.stack}`);
+    } else {
+      message = 'Internal server error';
+    }
 
     this.logger.error(`Error: ${message} - Status: ${status}`);
 
@@ -32,7 +39,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,
-      message: message,
+      message,
     });
   }
 }
