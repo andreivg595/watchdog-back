@@ -33,7 +33,7 @@ export class User {
   deletedAt: Date;
 
   @OneToMany(() => Point, (point) => point.createdBy)
-  points: Point[];
+  createdPoints: Point[];
 
   @OneToMany(() => Point, (point) => point.approvedBy)
   approvedPoints: Point[];

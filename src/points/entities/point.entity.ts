@@ -43,7 +43,7 @@ export class Point {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.points)
+  @ManyToOne(() => User, (user) => user.createdPoints)
   createdBy: User;
 
   @ManyToOne(() => User, { nullable: true })
