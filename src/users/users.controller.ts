@@ -15,13 +15,23 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Role } from 'src/auth/enums/role.enum';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiParam,
+  ApiBody,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 
+@ApiTags('Users')
+@ApiBearerAuth()
 @Controller('users')
 @UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
+  @ApiOperation({ summary: 'Get all users' })
   @Roles(Role.ADMIN)
   @UseGuards(RolesGuard)
   findAll() {
@@ -29,6 +39,8 @@ export class UsersController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get a user by ID' })
+  @ApiParam({ name: 'id', required: true, description: 'User ID' })
   findOne(@Param('id') id: string, @Request() req) {
     if (req.user.id !== +id && req.user.role !== Role.ADMIN) {
       throw new ForbiddenException('You do not have access to this resource');
@@ -37,6 +49,9 @@ export class UsersController {
   }
 
   @Put(':id')
+  @ApiOperation({ summary: 'Update a user by ID' })
+  @ApiParam({ name: 'id', required: true, description: 'User ID' })
+  @ApiBody({ type: UpdateUserDto })
   update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
@@ -49,6 +64,8 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete a user by ID' })
+  @ApiParam({ name: 'id', required: true, description: 'User ID' })
   remove(@Param('id') id: string, @Request() req) {
     if (req.user.id !== +id && req.user.role !== Role.ADMIN) {
       throw new ForbiddenException('You can only delete your own account');
